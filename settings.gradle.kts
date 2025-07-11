@@ -2,11 +2,13 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        gradlePluginPortal()
+        gradlePluginPortal() // This is crucial for resolving Android Gradle Plugins
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS) // This line enforces central repository declaration
+    // This line enforces that all repositories MUST be declared here.
+    // If you add repositories in project-level build.gradle.kts, it will cause an error.
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
