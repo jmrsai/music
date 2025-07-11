@@ -46,3 +46,22 @@ val GlassDarkSurface = Color(0x20000000) // Black with 12.5% opacity for dark gl
 val GlassLightBorder = Color(0x80FFFFFF) // White with 50% opacity for light glass border
 val GlassDarkBorder =
     Color(0x40FFFFFF) // White with 25% opacity for dark glass border (more visible)
+
+val Purple80 = Color(0xFFD0BCFF)
+val PurpleGrey80 = Color(0xFFCCC2DC)
+val Pink80 = Color(0xFFEFB8C8)
+
+val Purple40 = Color(0xFF6650a4)
+val PurpleGrey40: Color
+    get() = Color(0xFF625b71)
+val Pink40 = Color(0xFF7D5260)
+
+val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF000000)
+
+// Custom colors for backgrounds and surfaces
+val DarkBackground = Color(0xFF1A202C) // Tailwind gray-900 equivalent
+val DarkSurface = Color(0xFF2D3748)    // Tailwind gray-800 equivalent
+
+val LightBackground = Color(0xFFF7FAFC) // Tailwind gray-100 equivalent
+val LightSurface = Color(0xFFFFFFFF)    // White

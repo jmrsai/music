@@ -7,22 +7,34 @@ import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,10 +43,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.jmr.mediapowerhouse.ui.components.GlassmorphismCard
 import com.jmr.mediapowerhouse.ui.components.ToastMessage
-import com.jmr.mediapowerhouse.viewmodel.DownloadViewModel
-import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
+import com.jmr.mediapowerhouse.viewmodel.DownloadItem
 import java.io.File
-import kotlin.random.Random
 
 /**
  * Composable screen for managing torrent downloads.
@@ -45,11 +55,14 @@ import kotlin.random.Random
 @Composable
 fun TorrentScreen(
     modifier: Modifier = Modifier,
-    downloadViewModel: DownloadViewModel = viewModel(),
-    themeViewModel: ThemeViewModel = viewModel()
+    `torrentViewModel.kt`: `TorrentViewModel.kt` = viewModel(), // Use TorrentViewModel
+    `themeViewModel.kt`: `ThemeViewModel.kt` = viewModel()
 ) {
     val context = LocalContext.current
     var magnetUriInput by remember { mutableStateOf("") }
+
+    val torrents by `torrentViewModel.kt`.torrents.collectAsState() // Observe torrents from ViewModel
+    val isDarkMode by `themeViewModel.kt`.isDarkMode.collectAsState()
 
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
@@ -113,7 +126,10 @@ fun TorrentScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        GlassmorphismCard(modifier = Modifier.fillMaxWidth(), themeViewModel = themeViewModel) {
+        GlassmorphismCard(
+            modifier = Modifier.fillMaxWidth(),
+            `themeViewModel.kt` = `themeViewModel.kt`
+        ) {
             Text(
                 text = "Add Magnet Link",
                 style = MaterialTheme.typography.headlineSmall,
@@ -134,13 +150,7 @@ fun TorrentScreen(
             Button(
                 onClick = {
                     if (magnetUriInput.isNotBlank()) {
-                        val simulatedSize =
-                            Random.nextLong(100_000_000, 1_100_000_000) // 100MB - 1.1GB
-                        downloadViewModel.addDownload(
-                            name = "Torrent: ${magnetUriInput.take(30)}...",
-                            type = "Torrent",
-                            size = simulatedSize
-                        )
+                        `torrentViewModel.kt`.startTorrentDownload(magnetUriInput) // Use TorrentViewModel
                         toastMessage = "Torrent download started!"
                         showToast = true
                         magnetUriInput = "" // Clear input
@@ -155,6 +165,36 @@ fun TorrentScreen(
                 Text("Add Torrent")
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "Active Torrents",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        if (torrents.isEmpty()) {
+            Text(
+                text = "No active torrent downloads. Add one above!",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (isDarkMode) Color.LightGray else Color.Gray
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
+            ) {
+                items(torrents, key = { it.id }) { torrent ->
+                    TorrentDownloadItem(
+                        download = torrent,
+                        onStopClick = { `torrentViewModel.kt`.stopTorrentDownload(torrent.id) },
+                        `themeViewModel.kt` = `themeViewModel.kt`,
+                        isDarkMode = isDarkMode
+                    )
+                }
+            }
+        }
     }
 
     if (showToast) {
@@ -162,6 +202,82 @@ fun TorrentScreen(
             showToast = false
         }
     }
+}
+
+@Composable
+fun TorrentDownloadItem(
+    download: DownloadItem,
+    onStopClick: (Long) -> Unit,
+    `themeViewModel.kt`: `ThemeViewModel.kt`,
+    isDarkMode: Boolean
+) {
+    GlassmorphismCard(
+        modifier = Modifier.fillMaxWidth(),
+        `themeViewModel.kt` = `themeViewModel.kt`
+    ) {
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = download.name, style = MaterialTheme.typography.titleMedium)
+                IconButton(onClick = { onStopClick(download.id) }) {
+                    Icon(
+                        Icons.Default.Delete, // Using Delete icon for stop/remove
+                        contentDescription = "Stop Download",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (download.progress >= 100f) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = "Completed",
+                        tint = Color.Green
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = "Downloading",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "${download.status} - ${formatBytes(download.size)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isDarkMode) Color.LightGray else Color.Gray
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = download.progress / 100f, // Convert to 0.0-1.0 range
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+            )
+            Text(
+                text = "${download.progress.toInt()}%",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
+    }
+}
+
+/**
+ * Helper function to format bytes to human-readable string.
+ */
+private fun formatBytes(bytes: Long, decimals: Int = 2): String {
+    if (bytes == 0L) return "0 Bytes"
+    val k = 1024
+    val dm = if (decimals < 0) 0 else decimals
+    val sizes = arrayOf("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    val i = (Math.log(bytes.toDouble()) / Math.log(k.toDouble())).toInt()
+    return "%.${dm}f %s".format(bytes / Math.pow(k.toDouble(), i.toDouble()), sizes[i])
 }
 
 /**

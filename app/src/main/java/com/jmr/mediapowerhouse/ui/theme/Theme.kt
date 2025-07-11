@@ -15,50 +15,34 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-// Define the light color scheme for Material 3
-private val LightColorScheme = lightColorScheme(
-    primary = LightPrimary,
-    onPrimary = LightOnPrimary,
-    secondary = LightSecondary,
-    onSecondary = LightOnSecondary,
-    tertiary = LightTertiary,
-    onTertiary = LightOnPrimary, // Assuming onTertiary is similar to onPrimary for text contrast
-    background = LightBackground,
-    onBackground = LightOnSurface, // Text on background
-    surface = LightSurface,
-    onSurface = LightOnSurface, // Text on surface
-    surfaceVariant = PurpleGrey80, // Used for less prominent surfaces
-    onSurfaceVariant = DarkBackground // Text on surface variant
-)
-
-// Define the dark color scheme for Material 3
 private val DarkColorScheme = darkColorScheme(
-    primary = DarkPrimary,
-    onPrimary = DarkOnPrimary,
-    secondary = DarkSecondary,
-    onSecondary = DarkOnSecondary,
-    tertiary = DarkTertiary,
-    onTertiary = DarkOnPrimary, // Assuming onTertiary is similar to onPrimary for text contrast
-    background = DarkBackground,
-    onBackground = DarkOnSurface, // Text on background
-    surface = DarkSurface,
-    onSurface = DarkOnSurface, // Text on surface
-    surfaceVariant = PurpleGrey40, // Used for less prominent surfaces
-    onSurfaceVariant = LightBackground // Text on surface variant
+    primary = Purple80,
+    secondary = PurpleGrey80,
+    tertiary = Pink80,
+    background = DarkBackground, // Custom dark background
+    surface = DarkSurface,       // Custom dark surface
+    onPrimary = White,
+    onSecondary = White,
+    onBackground = White,
+    onSurface = White
 )
 
-/**
- * Main theme composable for Media Powerhouse.
- * It dynamically selects between light and dark themes, and supports dynamic theming on Android 12+.
- *
- * @param darkTheme If true, the dark theme is applied. Defaults to system setting.
- * @param dynamicColor If true, dynamic colors from wallpaper are used on Android 12+.
- * @param content The composable content to apply the theme to.
- */
+private val LightColorScheme = lightColorScheme(
+    primary = Purple40,
+    secondary = PurpleGrey40,
+    tertiary = Pink40,
+    background = LightBackground, // Custom light background
+    surface = LightSurface,       // Custom light surface
+    onPrimary = White,
+    onSecondary = Black,
+    onBackground = Black,
+    onSurface = Black
+)
+
 @Composable
 fun MediaPowerhouseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available only on Android 12+
+    darkTheme: Boolean = isSystemInDarkTheme(), // Default to system theme
+    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -75,16 +59,14 @@ fun MediaPowerhouseTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            // Set status bar color based on the primary color of the selected theme
             window.statusBarColor = colorScheme.primary.toArgb()
-            // Adjust system bar icons for light/dark content
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // Assuming Typography is defined in Typography.kt
+        typography = Typography,
         content = content
     )
 }

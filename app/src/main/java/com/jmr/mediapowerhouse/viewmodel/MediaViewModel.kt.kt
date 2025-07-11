@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
  * ViewModel responsible for loading and managing media (audio and video) from the device.
  * It provides filtered lists based on a search query.
  */
-class MediaViewModel(application: Application) : AndroidViewModel(application) {
+class `MediaViewModel.kt`(application: Application) : AndroidViewModel(application) {
 
     private val _audioList = MutableStateFlow<List<Uri>>(emptyList())
     private val _videoList = MutableStateFlow<List<Uri>>(emptyList())

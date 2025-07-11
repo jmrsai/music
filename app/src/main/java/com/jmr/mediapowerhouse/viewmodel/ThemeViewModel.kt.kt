@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
  * ViewModel for managing application-wide theme settings.
  * Includes toggles for dark mode and glassmorphism effect.
  */
-class ThemeViewModel : ViewModel() {
+class `ThemeViewModel.kt` : ViewModel() {
 
     private val _isDarkMode = MutableStateFlow(true) // Default to dark mode
     val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()

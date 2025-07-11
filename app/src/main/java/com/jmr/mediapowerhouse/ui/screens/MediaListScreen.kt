@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.jmr.mediapowerhouse.ui.components.GlassmorphismCard
-import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
+import com.jmr.mediapowerhouse.viewmodel.`ThemeViewModel.kt`
 
 /**
  * Composable screen for displaying a list of media items (audio or video).
@@ -45,7 +45,7 @@ fun MediaListScreen(
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    themeViewModel: ThemeViewModel = viewModel() // Inject ThemeViewModel for card styling
+    themeViewModel: `ThemeViewModel.kt` = viewModel() // Inject ThemeViewModel for card styling
 ) {
     Column(
         modifier = modifier
@@ -108,13 +108,13 @@ fun MediaListItem(
     uri: Uri,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    themeViewModel: ThemeViewModel = viewModel() // Inject ThemeViewModel for card styling
+    themeViewModel: `ThemeViewModel.kt` = viewModel() // Inject ThemeViewModel for card styling
 ) {
     GlassmorphismCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        themeViewModel = themeViewModel
+        `themeViewModel.kt` = themeViewModel
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

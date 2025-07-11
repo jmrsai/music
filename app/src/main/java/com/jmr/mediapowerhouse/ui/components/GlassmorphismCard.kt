@@ -16,7 +16,6 @@ import com.jmr.mediapowerhouse.ui.theme.GlassDarkBorder
 import com.jmr.mediapowerhouse.ui.theme.GlassDarkSurface
 import com.jmr.mediapowerhouse.ui.theme.GlassLightBorder
 import com.jmr.mediapowerhouse.ui.theme.GlassLightSurface
-import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
 
 /**
  * A Composable that applies a glassmorphism effect.
@@ -29,7 +28,7 @@ import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
 @Composable
 fun GlassmorphismCard(
     modifier: Modifier = Modifier,
-    themeViewModel: ThemeViewModel = viewModel(), // Inject ThemeViewModel
+    themeViewModel: `ThemeViewModel.kt` = viewModel(), // Inject ThemeViewModel
     content: @Composable ColumnScope.() -> Unit
 ) {
     val isDarkMode = themeViewModel.isDarkMode.value // Observe the theme state

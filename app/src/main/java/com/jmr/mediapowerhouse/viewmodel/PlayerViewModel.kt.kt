@@ -9,7 +9,7 @@ import androidx.media3.session.MediaController
  * ViewModel responsible for managing media playback state and interacting with the MediaController.
  * It provides functions to set the MediaController and play media items.
  */
-class PlayerViewModel : ViewModel() {
+class `PlayerViewModel.kt` : ViewModel() {
 
     private var mediaController: MediaController? = null
 

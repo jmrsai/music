@@ -31,7 +31,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jmr.mediapowerhouse.ui.components.GlassmorphismCard
 import com.jmr.mediapowerhouse.ui.components.ToastMessage
 import com.jmr.mediapowerhouse.viewmodel.DownloadViewModel
-import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
 import kotlin.random.Random
 
 /**
@@ -42,7 +41,7 @@ import kotlin.random.Random
 fun MusicScreen(
     modifier: Modifier = Modifier,
     downloadViewModel: DownloadViewModel = viewModel(),
-    themeViewModel: ThemeViewModel = viewModel()
+    themeViewModel: `ThemeViewModel.kt` = viewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var isPlaying by remember { mutableStateOf(false) }
@@ -61,7 +60,10 @@ fun MusicScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        GlassmorphismCard(modifier = Modifier.fillMaxWidth(), themeViewModel = themeViewModel) {
+        GlassmorphismCard(
+            modifier = Modifier.fillMaxWidth(),
+            `themeViewModel.kt` = themeViewModel
+        ) {
             Text(
                 text = "Search & Stream",
                 style = MaterialTheme.typography.headlineSmall,

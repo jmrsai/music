@@ -16,7 +16,7 @@ import androidx.media3.session.MediaSessionService
  * This service allows background media playback and integrates with system media controls.
  */
 @OptIn(UnstableApi::class) // For @UnstableApi annotations from Media3
-class PlaybackService : MediaSessionService() {
+class `PlaybackService.kt` : MediaSessionService() {
 
     private var mediaSession: MediaSession? = null
     private var exoPlayer: ExoPlayer? = null

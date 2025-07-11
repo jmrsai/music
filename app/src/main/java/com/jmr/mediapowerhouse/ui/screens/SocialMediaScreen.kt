@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jmr.mediapowerhouse.ui.components.GlassmorphismCard
 import com.jmr.mediapowerhouse.ui.components.ToastMessage
 import com.jmr.mediapowerhouse.viewmodel.DownloadViewModel
-import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
+import com.jmr.mediapowerhouse.viewmodel.`ThemeViewModel.kt`
 import kotlin.random.Random
 
 /**
@@ -37,7 +37,7 @@ import kotlin.random.Random
 fun SocialMediaScreen(
     modifier: Modifier = Modifier,
     downloadViewModel: DownloadViewModel = viewModel(),
-    themeViewModel: ThemeViewModel = viewModel()
+    `themeViewModel.kt`: `ThemeViewModel.kt` = viewModel()
 ) {
     var url by remember { mutableStateOf("") }
     val platforms = listOf("Instagram", "TikTok", "Twitter", "Facebook")
@@ -58,7 +58,10 @@ fun SocialMediaScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        GlassmorphismCard(modifier = Modifier.fillMaxWidth(), themeViewModel = themeViewModel) {
+        GlassmorphismCard(
+            modifier = Modifier.fillMaxWidth(),
+            `themeViewModel.kt` = `themeViewModel.kt`
+        ) {
             Text(
                 text = "Download from URL",
                 style = MaterialTheme.typography.headlineSmall,

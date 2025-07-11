@@ -28,8 +28,8 @@ class TorrentDownloadService : Service() {
     private val binder = TorrentDownloadServiceBinder()
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
 
-    private val activeDownloads =
-        mutableMapOf<Long, Job>() // Map of downloadId to its coroutine job
+    // Map of downloadId to its coroutine job, allowing individual download control
+    private val activeDownloads = mutableMapOf<Long, Job>()
 
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "torrent_download_channel"
@@ -72,7 +72,9 @@ class TorrentDownloadService : Service() {
 
     /**
      * Starts a simulated torrent download.
-     * In a real implementation, this would initiate the actual torrent download process.
+     * In a real implementation, this would initiate the actual torrent download process
+     * using `libtorrent4j`. The callbacks would be triggered by `libtorrent4j` events.
+     *
      * @param downloadId A unique ID for this download.
      * @param fileName The name of the file being downloaded.
      * @param totalSize The total size of the download in bytes.
@@ -90,6 +92,19 @@ class TorrentDownloadService : Service() {
             Log.d("TorrentService", "Download $downloadId already active.")
             return
         }
+
+        // --- Placeholder for actual libtorrent4j integration ---
+        // In a real scenario, you would initialize libtorrent4j here,
+        // add the torrent, and set up listeners for its events.
+        // Example (conceptual):
+        // val session = SessionManager.getInstance(applicationContext)
+        // val torrentHandle = session.addTorrent(magnetUri)
+        // torrentHandle.addListener(object : TorrentListener {
+        //     override fun onProgress(progress: Float) { onProgressUpdate(downloadId, progress) }
+        //     override fun onStatus(status: String) { onStatusUpdate(downloadId, status) }
+        //     // ... other callbacks
+        // })
+        // ----------------------------------------------------
 
         val job = serviceScope.launch {
             Log.d("TorrentService", "Starting simulated download for $fileName (ID: $downloadId)")
@@ -117,6 +132,8 @@ class TorrentDownloadService : Service() {
 
     /**
      * Stops a simulated torrent download.
+     * In a real implementation, this would tell `libtorrent4j` to stop the torrent.
+     *
      * @param downloadId The ID of the download to stop.
      */
     fun stopSimulatedTorrentDownload(downloadId: Long) {
@@ -124,6 +141,9 @@ class TorrentDownloadService : Service() {
         activeDownloads.remove(downloadId)
         Log.d("TorrentService", "Simulated download for ID: $downloadId stopped.")
         updateNotification("Download stopped.", 0) // Update notification to a generic state
+        // --- Placeholder for actual libtorrent4j integration ---
+        // session.removeTorrent(torrentHandle)
+        // ----------------------------------------------------
     }
 
     /**

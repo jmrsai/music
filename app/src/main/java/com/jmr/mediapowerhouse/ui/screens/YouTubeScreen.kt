@@ -32,7 +32,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jmr.mediapowerhouse.ui.components.GlassmorphismCard
 import com.jmr.mediapowerhouse.ui.components.ToastMessage
 import com.jmr.mediapowerhouse.viewmodel.DownloadViewModel
-import com.jmr.mediapowerhouse.viewmodel.ThemeViewModel
 import kotlin.random.Random
 
 /**
@@ -45,7 +44,7 @@ import kotlin.random.Random
 fun YouTubeScreen(
     modifier: Modifier = Modifier,
     downloadViewModel: DownloadViewModel = viewModel(),
-    themeViewModel: ThemeViewModel = viewModel()
+    themeViewModel: `ThemeViewModel.kt` = viewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var videoUrlInput by remember { mutableStateOf("") }
@@ -68,7 +67,10 @@ fun YouTubeScreen(
         )
 
         // Search Section
-        GlassmorphismCard(modifier = Modifier.fillMaxWidth(), themeViewModel = themeViewModel) {
+        GlassmorphismCard(
+            modifier = Modifier.fillMaxWidth(),
+            `themeViewModel.kt` = themeViewModel
+        ) {
             Text(
                 text = "Search YouTube",
                 style = MaterialTheme.typography.headlineSmall,
@@ -124,7 +126,10 @@ fun YouTubeScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Direct Download Link Section
-        GlassmorphismCard(modifier = Modifier.fillMaxWidth(), themeViewModel = themeViewModel) {
+        GlassmorphismCard(
+            modifier = Modifier.fillMaxWidth(),
+            `themeViewModel.kt` = themeViewModel
+        ) {
             Text(
                 text = "Download by URL",
                 style = MaterialTheme.typography.headlineSmall,
